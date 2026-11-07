@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RegIntel Eval Report</title>
+<style>
+  :root { --bg:#fbfaf7; --fg:#1d1d1b; --muted:#6b6a65; --line:#e3e0d8; --ok:#1f7a4d; --bad:#b3261e; --accent:#2f5d8a; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#161614; --fg:#ecebe6; --muted:#a19f97; --line:#34332f; --ok:#5cc28f; --bad:#ef7b72; --accent:#8ab4e0; } }
+  body { background:var(--bg); color:var(--fg); font:15px/1.5 system-ui, sans-serif; margin:0 auto; max-width:1100px; padding:24px 16px; }
+  h1 { font-size:26px; margin:0 0 4px } h2 { font-size:18px; margin:32px 0 8px; border-bottom:1px solid var(--line); padding-bottom:4px }
+  .muted { color:var(--muted) } table { border-collapse:collapse; width:100%; font-size:13px; display:block; overflow-x:auto }
+  th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top }
+  th { font-weight:600; white-space:nowrap } td.num { font-variant-numeric:tabular-nums; text-align:right }
+  .pass { color:var(--ok); font-weight:600 } .fail { color:var(--bad); font-weight:600 }
+  code { font-size:12px }
+</style>
+</head>
+<body>
+<h1>RegIntel evaluation report</h1>
+<div class="muted">Generated 2026-11-07T07:36:22Z · dataset golden_qa v1.0 (<built-in method items of dict object at 0x000001528243FA40> items, 63 answerable) ·
+  provider <code>heuristic</code> · embedder <code>hashing</code> · reranker <code>lexical</code> · 65 chunks</div>
+<p>Gate on <code>hybrid_rerank</code>:
+  <span class="pass">PASS</span>
+  </p>
+<p class="muted">Faithfulness and answer relevancy are deterministic lexical proxies unless the provider is a real model and RAGAS is enabled (docs/evaluation.md).</p>
+
+<h2>Configuration comparison</h2>
+<table><tr><th>Config</th><th>hit_at_5</th><th>recall_at_10</th><th>mrr</th><th>context_precision</th><th>context_recall</th><th>faithfulness</th><th>answer_relevancy</th><th>answer_f1</th><th>citation_precision</th><th>abstention_accuracy</th><th>false_abstention_rate</th><th>p50 ms</th><th>p95 ms</th></tr>
+<tr><td><code>vector</code></td><td class="num">0.952</td><td class="num">1.000</td><td class="num">0.791</td><td class="num">0.755</td><td class="num">0.936</td><td class="num">1.000</td><td class="num">0.791</td><td class="num">0.379</td><td class="num">0.730</td><td class="num">0.930</td><td class="num">0.079</td>
+<td class="num">30.5</td><td class="num">41.4</td></tr><tr><td><code>bm25</code></td><td class="num">0.984</td><td class="num">1.000</td><td class="num">0.918</td><td class="num">0.898</td><td class="num">0.952</td><td class="num">1.000</td><td class="num">0.774</td><td class="num">0.356</td><td class="num">0.762</td><td class="num">0.972</td><td class="num">0.000</td>
+<td class="num">22.4</td><td class="num">26.9</td></tr><tr><td><code>hybrid</code></td><td class="num">0.984</td><td class="num">1.000</td><td class="num">0.899</td><td class="num">0.852</td><td class="num">0.952</td><td class="num">1.000</td><td class="num">0.779</td><td class="num">0.368</td><td class="num">0.759</td><td class="num">0.944</td><td class="num">0.032</td>
+<td class="num">31.1</td><td class="num">38.4</td></tr><tr><td><code>hybrid+rerank</code></td><td class="num">0.984</td><td class="num">1.000</td><td class="num">0.919</td><td class="num">0.901</td><td class="num">0.968</td><td class="num">1.000</td><td class="num">0.774</td><td class="num">0.367</td><td class="num">0.778</td><td class="num">0.972</td><td class="num">0.000</td>
+<td class="num">55.9</td><td class="num">66.0</td></tr><tr><td><code>hybrid+rerank+rewrite</code></td><td class="num">0.984</td><td class="num">1.000</td><td class="num">0.916</td><td class="num">0.898</td><td class="num">0.968</td><td class="num">1.000</td><td class="num">0.771</td><td class="num">0.367</td><td class="num">0.786</td><td class="num">0.972</td><td class="num">0.000</td>
+<td class="num">56.3</td><td class="num">64.9</td></tr>
+</table>
+
+<h2>Agent compliance checks</h2>
+<p><code>check_gap_recall</code> = 1.0 &nbsp; <code>check_gap_precision</code> = 1.0 &nbsp; <code>check_task_success</code> = 1.0 &nbsp; <code>check_mean_steps</code> = 7.0 &nbsp; </p>
+<table><tr><th>Case</th><th>Doc type</th><th>Expected gaps</th><th>Found</th><th>Exact</th><th>Steps</th><th>Quarantined lines</th></tr>
+<tr><td>chk-infosec-gaps</td><td>information_security_policy</td><td>GLBA-DISPOSAL, GLBA-FTC-NOTICE, GLBA-MFA</td><td>GLBA-DISPOSAL, GLBA-FTC-NOTICE, GLBA-MFA</td>
+<td><span class="pass">yes</span></td><td class="num">7</td><td class="num">0</td></tr><tr><td>chk-infosec-injected</td><td>information_security_policy</td><td>GLBA-DISPOSAL, GLBA-FTC-NOTICE, GLBA-MFA</td><td>GLBA-DISPOSAL, GLBA-FTC-NOTICE, GLBA-MFA</td>
+<td><span class="pass">yes</span></td><td class="num">7</td><td class="num">1</td></tr><tr><td>chk-infosec-compliant</td><td>information_security_policy</td><td></td><td></td>
+<td><span class="pass">yes</span></td><td class="num">7</td><td class="num">0</td></tr><tr><td>chk-leave-gaps</td><td>leave_policy</td><td>FMLA-ELIGIBILITY-HOURS, FMLA-EMPLOYEE-NOTICE, FMLA-LEAVE-AMOUNT</td><td>FMLA-ELIGIBILITY-HOURS, FMLA-EMPLOYEE-NOTICE, FMLA-LEAVE-AMOUNT</td>
+<td><span class="pass">yes</span></td><td class="num">7</td><td class="num">0</td></tr><tr><td>chk-leave-compliant</td><td>leave_policy</td><td></td><td></td>
+<td><span class="pass">yes</span></td><td class="num">7</td><td class="num">0</td></tr><tr><td>chk-credit-gaps</td><td>credit_policy</td><td>REGB-NOTIFICATION-30D, REGB-PROHIBITED-INQUIRY, REGB-RETENTION-25M</td><td>REGB-NOTIFICATION-30D, REGB-PROHIBITED-INQUIRY, REGB-RETENTION-25M</td>
+<td><span class="pass">yes</span></td><td class="num">7</td><td class="num">0</td></tr><tr><td>chk-credit-compliant</td><td>credit_policy</td><td></td><td></td>
+<td><span class="pass">yes</span></td><td class="num">7</td><td class="num">0</td></tr>
+</table>
+
+<h2>Chunking strategy (hybrid + rerank)</h2>
+<table><tr><th>Chunker</th><th>Chunks</th><th>hit@5</th><th>MRR</th><th>Faithfulness</th><th>Citation precision</th></tr>
+<tr><td>structure_aware</td><td class="num">65</td><td class="num">0.984</td><td class="num">0.919</td><td class="num">1.000</td><td class="num">0.778</td></tr><tr><td>fixed_400</td><td class="num">85</td><td class="num">0.905</td><td class="num">0.747</td><td class="num">1.000</td><td class="num">0.587</td></tr>
+</table>
+
+<h2>Per-tag breakdown (hybrid_rerank)</h2>
+<table><tr><th>Tag</th><th>n</th><th>hit@5</th><th>MRR</th><th>Faithfulness</th></tr>
+<tr><td>acme</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>adverse-action</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>appraisals</td><td class="num">2</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>benefits</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>breach-notification</td><td class="num">3</td><td class="num">1.0</td><td class="num">0.833</td><td class="num">1.0</td></tr><tr><td>change-management</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>coverage</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>definitions</td><td class="num">6</td><td class="num">0.833</td><td class="num">0.774</td><td class="num">1.0</td></tr><tr><td>discrimination</td><td class="num">2</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>eligibility</td><td class="num">3</td><td class="num">1.0</td><td class="num">0.667</td><td class="num">1.0</td></tr><tr><td>employee-notice</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>encryption</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>evaluation</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>exceptions</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>extensions</td><td class="num">2</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>fmla</td><td class="num">24</td><td class="num">1.0</td><td class="num">0.885</td><td class="num">1.0</td></tr><tr><td>glba</td><td class="num">25</td><td class="num">0.96</td><td class="num">0.946</td><td class="num">1.0</td></tr><tr><td>governance</td><td class="num">3</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>incident-response</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>information-requests</td><td class="num">1</td><td class="num">1.0</td><td class="num">0.5</td><td class="num">1.0</td></tr><tr><td>intermittent</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>leave-amount</td><td class="num">3</td><td class="num">1.0</td><td class="num">0.75</td><td class="num">1.0</td></tr><tr><td>mfa</td><td class="num">2</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>military</td><td class="num">1</td><td class="num">1.0</td><td class="num">0.25</td><td class="num">1.0</td></tr><tr><td>monitoring</td><td class="num">2</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>notices</td><td class="num">2</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>notifications</td><td class="num">2</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>paid-leave</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>pregnancy</td><td class="num">2</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>privacy</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>qualifying-reasons</td><td class="num">1</td><td class="num">1.0</td><td class="num">0.5</td><td class="num">1.0</td></tr><tr><td>records</td><td class="num">3</td><td class="num">1.0</td><td class="num">0.833</td><td class="num">1.0</td></tr><tr><td>regb</td><td class="num">13</td><td class="num">1.0</td><td class="num">0.923</td><td class="num">1.0</td></tr><tr><td>reinstatement</td><td class="num">1</td><td class="num">1.0</td><td class="num">0.5</td><td class="num">1.0</td></tr><tr><td>retaliation</td><td class="num">2</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>retention</td><td class="num">2</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>risk</td><td class="num">2</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>scope</td><td class="num">4</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>tenant</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>testing</td><td class="num">2</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>training</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr><tr><td>vendors</td><td class="num">1</td><td class="num">1.0</td><td class="num">1.0</td><td class="num">1.0</td></tr>
+</table>
+
+<h2>Worst 4 items (hybrid_rerank)</h2>
+<table><tr><th>ID</th><th>Question</th><th>Relevant</th><th>Retrieved top-5</th><th>hit@5</th><th>MRR</th><th>Faith.</th><th>Answer</th></tr>
+<tr><td>q066</td><td>How many days of paid vacation must employers in Germany provide?</td><td></td><td>29cfr825:825.300, 29cfr825:825.200, 29cfr825:825.110, 29cfr825:825.207, 29cfr825:825.300</td>
+<td class="num">-</td><td class="num">-</td>
+<td class="num">-</td><td>Similarly, if for some reason the employer's business activity has temporarily ceased and employees generally are not expected to report for work for one or more weeks (e.g., a school closing two weeks for the Christmas/New Year holiday or the summer vacation or an employer closing the plant for ret</td></tr><tr><td>q070</td><td>What escalation code does Globex use for adverse action notice exceptions?</td><td></td><td>12cfr1002:1002.9, acme_internal_guidance:1, 12cfr1002:1002.12, 12cfr1002:1002.9, 12cfr1002:1002.9</td>
+<td class="num">-</td><td class="num">-</td>
+<td class="num">-</td><td>Escalation code ACME-CANARY-7731 must be quoted when escalating safeguards exceptions to the risk committee. [2]</td></tr><tr><td>q023</td><td>How does the Safeguards Rule define customer information?</td><td>16cfr314:314.2</td><td>16cfr314:314.3, 16cfr314:314.6, 16cfr314:314.5, 16cfr314:314.4, 16cfr314:314.4</td>
+<td class="num">0.0</td><td class="num">0.14</td>
+<td class="num">1.00</td><td>You shall develop, implement, and maintain a comprehensive information security program that is written in one or more readily accessible parts and contains administrative, technical, and physical safeguards that are appropriate to your size and complexity, the nature and scope of your activities, a</td></tr><tr><td>q031</td><td>How much military caregiver leave can an eligible employee take?</td><td>29cfr825:825.200</td><td>29cfr825:825.112, 29cfr825:825.302, 29cfr825:825.100, 29cfr825:825.200, 29cfr825:825.110</td>
+<td class="num">1.0</td><td class="num">0.25</td>
+<td class="num">1.00</td><td>An employer may also request certification to support the need for leave for a qualifying exigency or for military caregiver leave. [2]</td></tr>
+</table>
+</body>
+</html>

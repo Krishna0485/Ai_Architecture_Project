@@ -1,0 +1,15 @@
+flowchart LR
+  users([Analysts / reviewers]) --> ui[UI - Streamlit]
+  claude([Claude Desktop / Code]) -->|MCP| mcp[MCP server]
+  ui --> api[API - FastAPI]
+  api --> guard[Guardrails\nPII, injection, output validation, policy]
+  api --> rag[RAG service\nrewrite, BM25 + vector, RRF, rerank, citations, abstention]
+  api --> agents[Agents - LangGraph\ncompliance_check, checklist_testgen, HITL]
+  mcp --> tools[RegIntelTools\nvalidate, authorise, audit]
+  tools --> rag & agents
+  rag & agents --> gw[LLM gateway\nrouting, budgets, cache, fallbacks]
+  gw --> litellm[LiteLLM] --> ollama[(Ollama q4)] & hosted[(Hosted model)]
+  rag --> stores[(Qdrant, BM25/OpenSearch)]
+  agents --> pg[(Postgres checkpoints, audit)]
+  gw --> redis[(Redis cache)]
+  api -. OTel .-> obs[Jaeger, Langfuse, Prometheus, Grafana]

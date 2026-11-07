@@ -1,0 +1,90 @@
+# Core RegIntel stack. `make up` (from repo root).
+# Image tags are pinned; bump them deliberately (Dependabot watches infra/docker).
+name: regintel
+
+x-app-env: &app-env
+  env_file: ../../.env
+  environment:
+    REGINTEL_VECTOR_STORE: qdrant
+    REGINTEL_QDRANT_URL: http://qdrant:6333
+    REGINTEL_KEYWORD_STORE: bm25
+    REGINTEL_LLM_PROVIDER: openai_compatible
+    REGINTEL_GATEWAY_URL: http://gateway:4000
+    REGINTEL_CACHE_BACKEND: redis
+    REGINTEL_REDIS_URL: redis://redis:6379/0
+    REGINTEL_CHECKPOINTER: postgres
+    REGINTEL_AUDIT_BACKEND: postgres
+    REGINTEL_POSTGRES_DSN: postgresql://postgres:devonly@postgres:5432/regintel
+
+services:
+  api:
+    build: { context: ../.., dockerfile: infra/docker/Dockerfile.api, args: { EXTRAS: stores } }
+    <<: *app-env
+    ports: ["8080:8080"]
+    depends_on:
+      qdrant: { condition: service_started }
+      postgres: { condition: service_healthy }
+      redis: { condition: service_started }
+      gateway: { condition: service_started }
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+
+  mcp:
+    build: { context: ../.., dockerfile: infra/docker/Dockerfile.api, args: { EXTRAS: stores } }
+    <<: *app-env
+    command: ["python", "-m", "regintel.mcp_server", "--transport", "http", "--host", "0.0.0.0", "--port", "8000"]
+    ports: ["8000:8000"]
+    depends_on: [api]
+    read_only: true
+    tmpfs: [/tmp]
+
+  worker:
+    build: { context: ../.., dockerfile: infra/docker/Dockerfile.worker }
+    <<: *app-env
+    profiles: [queue]
+    depends_on: [postgres, redis]
+
+  gateway:
+    image: ghcr.io/berriai/litellm:main-v1.55.8
+    command: ["--config", "/config.yaml", "--port", "4000"]
+    volumes: ["../litellm.yaml:/config.yaml:ro"]
+    env_file: ../../.env
+    ports: ["4000:4000"]
+    depends_on: [ollama]
+
+  ollama:
+    image: ollama/ollama:0.5.4
+    volumes: ["ollama:/root/.ollama"]
+    ports: ["11434:11434"]
+    # First run: docker compose exec ollama ollama pull qwen2.5:3b-instruct-q4_K_M
+    #            docker compose exec ollama ollama pull qwen2.5:7b-instruct-q4_K_M
+
+  qdrant:
+    image: qdrant/qdrant:v1.12.4
+    volumes: ["qdrant:/qdrant/storage"]
+    ports: ["6333:6333"]
+
+  opensearch:
+    image: opensearchproject/opensearch:2.17.1
+    profiles: [opensearch]
+    environment:
+      discovery.type: single-node
+      DISABLE_SECURITY_PLUGIN: "true"
+      OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
+    ports: ["9200:9200"]
+
+  postgres:
+    image: postgres:16.6
+    environment: { POSTGRES_PASSWORD: devonly, POSTGRES_DB: regintel }
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7.4.1
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+
+volumes: { ollama: {}, qdrant: {}, pgdata: {} }

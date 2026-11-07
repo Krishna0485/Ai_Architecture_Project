@@ -1,0 +1,37 @@
+# syntax=docker/dockerfile:1.7
+# RegIntel API / MCP image. Multi-stage: build a locked venv with uv, run as non-root.
+ARG PYTHON_VERSION=3.12
+
+FROM python:${PYTHON_VERSION}-slim AS builder
+COPY --from=ghcr.io/astral-sh/uv:0.5.11 /uv /usr/local/bin/uv
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy UV_PYTHON_DOWNLOADS=never
+WORKDIR /app
+ARG EXTRAS=""
+COPY pyproject.toml uv.lock* README.md ./
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --no-dev --no-install-project ${EXTRAS:+--extra $EXTRAS} || \
+    uv sync --no-dev --no-install-project
+COPY src ./src
+RUN --mount=type=cache,target=/root/.cache/uv uv sync --no-dev
+
+FROM python:${PYTHON_VERSION}-slim AS runtime
+LABEL org.opencontainers.image.source="https://github.com/Krishna0485/Ai_Architecture_Project" \
+      org.opencontainers.image.description="RegIntel API" \
+      org.opencontainers.image.licenses="MIT"
+RUN groupadd --system --gid 10001 regintel && \
+    useradd --system --uid 10001 --gid regintel --home /app regintel
+WORKDIR /app
+COPY --from=builder --chown=regintel:regintel /app/.venv /app/.venv
+COPY --chown=regintel:regintel src ./src
+COPY --chown=regintel:regintel prompts ./prompts
+COPY --chown=regintel:regintel data/samples ./data/samples
+COPY --chown=regintel:regintel data/catalog ./data/catalog
+ENV PATH="/app/.venv/bin:$PATH" PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 \
+    REGINTEL_PROJECT_ROOT=/app REGINTEL_PROMPTS_DIR=/app/prompts REGINTEL_DATA_DIR=/app/data \
+    REGINTEL_CATALOG_DIR=/app/data/catalog REGINTEL_INDEX_PATH=/tmp/index/chunks.jsonl \
+    REGINTEL_AUDIT_PATH=/tmp/audit/audit.jsonl
+USER 10001
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=3s --start-period=20s \
+  CMD python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8080/health').status==200 else 1)"
+CMD ["uvicorn", "regintel.api.main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "2"]

@@ -1,0 +1,77 @@
+# Controls derived from 16 CFR 314.4 (GLBA Safeguards Rule). Each requirement is checked against
+# the policy facts; "constraint" adds a numeric test, "prohibited_pattern" flags forbidden practice.
+doc_type: information_security_policy
+regulation_source: 16cfr314
+requirements:
+  - id: GLBA-QI
+    section: "314.4"
+    requirement: Designate a Qualified Individual responsible for overseeing, implementing and enforcing the information security program.
+    keywords: [qualified individual]
+    severity: high
+  - id: GLBA-RISK-ASSESSMENT
+    section: "314.4"
+    requirement: Base the information security program on a written risk assessment that identifies reasonably foreseeable internal and external risks to customer information.
+    keywords: [risk assessment]
+    severity: high
+  - id: GLBA-ACCESS
+    section: "314.4"
+    requirement: Implement and periodically review access controls limiting authorized users to customer information they need.
+    keywords: [least-privilege, access control, access to customer information]
+    severity: medium
+  - id: GLBA-ENCRYPTION
+    section: "314.4"
+    requirement: Protect by encryption all customer information held or transmitted, both in transit over external networks and at rest.
+    keywords: [encrypt]
+    severity: high
+  - id: GLBA-MFA
+    section: "314.4"
+    requirement: Implement multi-factor authentication for any individual accessing any information system.
+    keywords: [multi-factor, multifactor, mfa]
+    severity: high
+  - id: GLBA-DISPOSAL
+    section: "314.4"
+    requirement: Develop procedures for the secure disposal of customer information no later than two years after the last date the information is used in connection with the provision of a product or service, unless retention is necessary or required by law.
+    keywords: [dispos, retained]
+    constraint: {op: max, value: 2, unit: year}
+    severity: medium
+  - id: GLBA-CHANGE-MANAGEMENT
+    section: "314.4"
+    requirement: Adopt procedures for change management.
+    keywords: [change management]
+    severity: low
+  - id: GLBA-MONITORING
+    section: "314.4"
+    requirement: Implement policies, procedures and controls designed to monitor and log the activity of authorized users and detect unauthorized access to customer information.
+    keywords: [logged, monitor]
+    severity: medium
+  - id: GLBA-TESTING
+    section: "314.4"
+    requirement: Regularly test or monitor safeguards, including annual penetration testing and vulnerability assessments every six months absent continuous monitoring.
+    keywords: [penetration testing]
+    severity: medium
+  - id: GLBA-TRAINING
+    section: "314.4"
+    requirement: Provide personnel with security awareness training that is updated as necessary.
+    keywords: [training]
+    severity: low
+  - id: GLBA-SERVICE-PROVIDERS
+    section: "314.4"
+    requirement: Oversee service providers by selecting capable providers, requiring safeguards by contract and periodically assessing them.
+    keywords: [service provider]
+    severity: medium
+  - id: GLBA-INCIDENT-RESPONSE
+    section: "314.4"
+    requirement: Establish a written incident response plan designed to promptly respond to and recover from any security event.
+    keywords: [incident response plan]
+    severity: high
+  - id: GLBA-BOARD-REPORT
+    section: "314.4"
+    requirement: Require the Qualified Individual to report in writing, regularly and at least annually, to the board of directors.
+    keywords: [board of directors]
+    severity: low
+  - id: GLBA-FTC-NOTICE
+    section: "314.4"
+    requirement: Notify the Federal Trade Commission as soon as possible, and no later than 30 days after discovery, of a notification event involving the information of at least 500 consumers.
+    keywords: [federal trade commission]
+    constraint: {op: max, value: 30, unit: day}
+    severity: high

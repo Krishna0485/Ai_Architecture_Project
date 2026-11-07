@@ -1,0 +1,43 @@
+{{- if .Values.networkPolicy.enabled }}
+# Default deny for all RegIntel pods, then allow only what is needed.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "regintel.fullname" . }}-default-deny
+  labels:
+    {{- include "regintel.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes: [Ingress, Egress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "regintel.fullname" . }}-allow
+  labels:
+    {{- include "regintel.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              {{- toYaml .Values.networkPolicy.ingressNamespaceSelector | nindent 14 }}
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: prometheus
+      ports:
+        - { port: 8080 }
+        - { port: 8000 }
+  egress:
+    - ports:
+        {{- range .Values.networkPolicy.egressPorts }}
+        - { port: {{ . }} }
+        {{- end }}
+        - { port: 53, protocol: UDP }
+{{- end }}

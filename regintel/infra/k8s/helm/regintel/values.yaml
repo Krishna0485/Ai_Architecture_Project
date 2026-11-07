@@ -1,0 +1,100 @@
+# Default values. Secrets are never stored here: reference an existing Secret (or an
+# ExternalSecret synced from a cloud secret manager) via `secrets.existingSecret`.
+image:
+  repository: ghcr.io/krishna0485/regintel-api
+  tag: ""                # defaults to .Chart.AppVersion
+  pullPolicy: IfNotPresent
+workerImage:
+  repository: ghcr.io/krishna0485/regintel-worker
+  tag: ""
+
+imagePullSecrets: []
+serviceAccount:
+  create: true
+  automountToken: false
+
+# Non-secret configuration -> ConfigMap -> env (keys are REGINTEL_* settings).
+config:
+  REGINTEL_ENV: prod
+  REGINTEL_VECTOR_STORE: qdrant
+  REGINTEL_QDRANT_URL: http://qdrant:6333
+  REGINTEL_KEYWORD_STORE: bm25
+  REGINTEL_LLM_PROVIDER: openai_compatible
+  REGINTEL_GATEWAY_URL: http://litellm:4000
+  REGINTEL_CACHE_BACKEND: redis
+  REGINTEL_REDIS_URL: redis://redis:6379/0
+  REGINTEL_CHECKPOINTER: postgres
+  REGINTEL_AUDIT_BACKEND: postgres
+  REGINTEL_CHECK_EXECUTOR: queue
+  REGINTEL_AGENTS_ENABLED: "true"
+  REGINTEL_OTEL_ENABLED: "true"
+  REGINTEL_OTEL_ENDPOINT: http://otel-collector:4318/v1/traces
+
+secrets:
+  # Secret with keys: REGINTEL_API_KEYS, REGINTEL_GATEWAY_API_KEY, REGINTEL_POSTGRES_DSN,
+  # REGINTEL_LANGFUSE_PUBLIC_KEY, REGINTEL_LANGFUSE_SECRET_KEY
+  existingSecret: regintel-secrets
+  externalSecret:
+    enabled: false          # requires the External Secrets Operator
+    secretStoreRef: { name: cluster-secret-store, kind: ClusterSecretStore }
+    remoteKey: regintel/prod
+
+components:
+  api:
+    enabled: true
+    replicas: 2
+    port: 8080
+    command: []
+    service: { type: ClusterIP, port: 80 }
+    probes: { path: /health, readyPath: /ready }
+    resources:
+      requests: { cpu: 250m, memory: 512Mi }
+      limits: { cpu: "1", memory: 1Gi }
+    hpa: { enabled: true, minReplicas: 2, maxReplicas: 6, targetCPU: 70 }
+  mcp:
+    enabled: true
+    replicas: 1
+    port: 8000
+    command: ["python", "-m", "regintel.mcp_server", "--transport", "http", "--host", "0.0.0.0", "--port", "8000"]
+    service: { type: ClusterIP, port: 8000 }
+    probes: { tcp: true }
+    resources:
+      requests: { cpu: 100m, memory: 384Mi }
+      limits: { cpu: 500m, memory: 768Mi }
+    hpa: { enabled: false }
+  worker:
+    enabled: true
+    replicas: 1
+    command: ["python", "-m", "regintel.worker"]
+    useWorkerImage: true
+    resources:
+      requests: { cpu: 250m, memory: 512Mi }
+      limits: { cpu: "1", memory: 1Gi }
+    hpa: { enabled: true, minReplicas: 1, maxReplicas: 4, targetCPU: 75 }
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile: { type: RuntimeDefault }
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities: { drop: [ALL] }
+
+networkPolicy:
+  enabled: true
+  # Namespaces/pods allowed to reach the API (ingress controller) and egress targets.
+  ingressNamespaceSelector: { kubernetes.io/metadata.name: ingress-nginx }
+  egressPorts: [6333, 6379, 5432, 4000, 4318, 53]
+
+pdb:
+  enabled: true
+  minAvailable: 1
+
+ingress:
+  enabled: false
+  className: nginx
+  host: regintel.example.com
+  tls: []

@@ -1,0 +1,67 @@
+sources:
+- file: ecfr/16cfr314.xml
+  source: 16cfr314
+  act: GLBA Safeguards Rule
+  citation: 16 CFR Part 314
+  jurisdiction: US-FED
+  effective_date: '2024-06-01'
+  version: eCFR
+  url: https://www.ecfr.gov/current/title-16/part-314
+  licence: US Government work - public domain (17 U.S.C. 105)
+  tenant_id: public
+  allowed_groups:
+  - '*'
+  doc_type: regulation
+- file: ecfr/29cfr825.xml
+  source: 29cfr825
+  act: Family and Medical Leave Act (FMLA)
+  citation: 29 CFR Part 825
+  jurisdiction: US-FED
+  effective_date: '2024-06-01'
+  version: eCFR
+  url: https://www.ecfr.gov/current/title-29/part-825
+  licence: US Government work - public domain (17 U.S.C. 105)
+  tenant_id: public
+  allowed_groups:
+  - '*'
+  doc_type: regulation
+- file: ecfr/12cfr1002.xml
+  source: 12cfr1002
+  act: Equal Credit Opportunity Act (Regulation B)
+  citation: 12 CFR Part 1002
+  jurisdiction: US-FED
+  effective_date: '2024-06-01'
+  version: eCFR
+  url: https://www.ecfr.gov/current/title-12/part-1002
+  licence: US Government work - public domain (17 U.S.C. 105)
+  tenant_id: public
+  allowed_groups:
+  - '*'
+  doc_type: regulation
+- file: tenant/acme_internal_guidance.md
+  source: acme_internal_guidance
+  act: Acme internal guidance
+  citation: Acme internal
+  jurisdiction: INTERNAL
+  effective_date: '2026-01-01'
+  version: '1'
+  url: ''
+  licence: Synthetic - project generated
+  tenant_id: acme
+  allowed_groups:
+  - compliance
+  - admin
+  doc_type: internal_guidance
+- file: tenant/globex_internal_guidance.md
+  source: globex_internal_guidance
+  act: Globex internal guidance
+  citation: Globex internal
+  jurisdiction: INTERNAL
+  effective_date: '2026-01-01'
+  version: '1'
+  url: ''
+  licence: Synthetic - project generated
+  tenant_id: globex
+  allowed_groups:
+  - compliance
+  doc_type: internal_guidance

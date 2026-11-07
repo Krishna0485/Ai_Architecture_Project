@@ -1,0 +1,28 @@
+# kind / k3d: single replica, locally built image, offline lite mode (no external services).
+image:
+  repository: regintel-api
+  tag: local
+  pullPolicy: Never
+config:
+  REGINTEL_ENV: staging
+  REGINTEL_VECTOR_STORE: memory
+  REGINTEL_LLM_PROVIDER: heuristic
+  REGINTEL_CACHE_BACKEND: memory
+  REGINTEL_CHECKPOINTER: memory
+  REGINTEL_AUDIT_BACKEND: jsonl
+  REGINTEL_CHECK_EXECUTOR: background
+  REGINTEL_OTEL_ENABLED: "false"
+secrets:
+  existingSecret: regintel-secrets   # kubectl -n regintel create secret generic regintel-secrets --from-literal=REGINTEL_API_KEYS='{...}'
+components:
+  api:
+    replicas: 1
+    hpa: { enabled: false }
+  mcp:
+    enabled: true
+  worker:
+    enabled: false
+networkPolicy:
+  enabled: false
+pdb:
+  enabled: false

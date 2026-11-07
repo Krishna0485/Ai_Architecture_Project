@@ -1,0 +1,12 @@
+flowchart TD
+    start([start]) --> classify_document
+    classify_document -->|supported type| extract_obligations
+    classify_document -->|unknown / error| finalize_report
+    extract_obligations -->|quarantined, schema-validated facts| retrieve_rules
+    retrieve_rules -->|catalogue requirements + regulation citations| compare
+    compare --> draft_findings
+    draft_findings --> human_review{{human_review - interrupt}}
+    human_review -->|approve / correct / reject| finalize_report
+    finalize_report --> done([end])
+    classDef q fill:#fdecea,stroke:#b3261e;
+    class classify_document,extract_obligations q;

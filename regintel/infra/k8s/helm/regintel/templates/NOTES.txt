@@ -1,0 +1,13 @@
+RegIntel {{ .Chart.AppVersion }} installed as "{{ .Release.Name }}" in namespace {{ .Release.Namespace }}.
+
+API:
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "regintel.fullname" . }}-api 8080:{{ .Values.components.api.service.port }}
+  curl -s localhost:8080/ready
+{{- if .Values.components.mcp.enabled }}
+
+MCP (streamable HTTP, bearer token = RegIntel API key):
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "regintel.fullname" . }}-mcp 8000:8000
+{{- end }}
+
+Kill switch for agent workflows:
+  helm upgrade {{ .Release.Name }} <chart> --reuse-values --set config.REGINTEL_AGENTS_ENABLED=false

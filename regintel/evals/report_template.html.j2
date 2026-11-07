@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RegIntel Eval Report</title>
+<style>
+  :root { --bg:#fbfaf7; --fg:#1d1d1b; --muted:#6b6a65; --line:#e3e0d8; --ok:#1f7a4d; --bad:#b3261e; --accent:#2f5d8a; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#161614; --fg:#ecebe6; --muted:#a19f97; --line:#34332f; --ok:#5cc28f; --bad:#ef7b72; --accent:#8ab4e0; } }
+  body { background:var(--bg); color:var(--fg); font:15px/1.5 system-ui, sans-serif; margin:0 auto; max-width:1100px; padding:24px 16px; }
+  h1 { font-size:26px; margin:0 0 4px } h2 { font-size:18px; margin:32px 0 8px; border-bottom:1px solid var(--line); padding-bottom:4px }
+  .muted { color:var(--muted) } table { border-collapse:collapse; width:100%; font-size:13px; display:block; overflow-x:auto }
+  th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top }
+  th { font-weight:600; white-space:nowrap } td.num { font-variant-numeric:tabular-nums; text-align:right }
+  .pass { color:var(--ok); font-weight:600 } .fail { color:var(--bad); font-weight:600 }
+  code { font-size:12px }
+</style>
+</head>
+<body>
+<h1>RegIntel evaluation report</h1>
+<div class="muted">Generated {{ s.generated_at }} · dataset {{ s.dataset.name }} v{{ s.dataset.version }} ({{ s.dataset.items }} items, {{ s.dataset.answerable }} answerable) ·
+  provider <code>{{ s.env.llm_provider }}</code> · embedder <code>{{ s.env.embedder }}</code> · reranker <code>{{ s.env.reranker }}</code> · {{ s.env.chunks }} chunks</div>
+<p>Gate on <code>{{ s.gate.config }}</code>:
+  {% if s.gate.passed %}<span class="pass">PASS</span>{% else %}<span class="fail">FAIL</span>{% endif %}
+  {% for f in s.gate.failures %}<br><span class="fail">{{ f }}</span>{% endfor %}</p>
+<p class="muted">Faithfulness and answer relevancy are deterministic lexical proxies unless the provider is a real model and RAGAS is enabled (docs/evaluation.md).</p>
+
+<h2>Configuration comparison</h2>
+<table><tr><th>Config</th>{% for k in keys %}<th>{{ k }}</th>{% endfor %}<th>p50 ms</th><th>p95 ms</th></tr>
+{% for c in s.configs %}<tr><td><code>{{ c.config }}</code></td>{% for k in keys %}<td class="num">{{ "%.3f"|format(c.metrics[k]) }}</td>{% endfor %}
+<td class="num">{{ "%.1f"|format(c.metrics.p50_latency_ms) }}</td><td class="num">{{ "%.1f"|format(c.metrics.p95_latency_ms) }}</td></tr>{% endfor %}
+</table>
+
+{% if s.checks %}<h2>Agent compliance checks</h2>
+<p>{% for k, v in s.checks.metrics.items() %}<code>{{ k }}</code> = {{ v }} &nbsp; {% endfor %}</p>
+<table><tr><th>Case</th><th>Doc type</th><th>Expected gaps</th><th>Found</th><th>Exact</th><th>Steps</th><th>Quarantined lines</th></tr>
+{% for c in s.checks.cases %}<tr><td>{{ c.id }}</td><td>{{ c.doc_type }}</td><td>{{ c.expected|join(", ") }}</td><td>{{ c.found|join(", ") }}</td>
+<td>{% if c.exact %}<span class="pass">yes</span>{% else %}<span class="fail">no</span>{% endif %}</td><td class="num">{{ c.steps }}</td><td class="num">{{ c.quarantined_lines }}</td></tr>{% endfor %}
+</table>{% endif %}
+
+{% if s.chunking %}<h2>Chunking strategy (hybrid + rerank)</h2>
+<table><tr><th>Chunker</th><th>Chunks</th><th>hit@5</th><th>MRR</th><th>Faithfulness</th><th>Citation precision</th></tr>
+{% for n, m in s.chunking.items() %}<tr><td>{{ n }}</td><td class="num">{{ m.chunks }}</td><td class="num">{{ "%.3f"|format(m.hit_at_5) }}</td><td class="num">{{ "%.3f"|format(m.mrr) }}</td><td class="num">{{ "%.3f"|format(m.faithfulness) }}</td><td class="num">{{ "%.3f"|format(m.citation_precision) }}</td></tr>{% endfor %}
+</table>{% endif %}
+
+{% if s.per_tag %}<h2>Per-tag breakdown ({{ s.gate.config }})</h2>
+<table><tr><th>Tag</th><th>n</th><th>hit@5</th><th>MRR</th><th>Faithfulness</th></tr>
+{% for t, m in s.per_tag.items() %}<tr><td>{{ t }}</td><td class="num">{{ m.n }}</td><td class="num">{{ m.hit_at_5 }}</td><td class="num">{{ m.mrr }}</td><td class="num">{{ m.faithfulness }}</td></tr>{% endfor %}
+</table>{% endif %}
+
+{% if s.worst %}<h2>Worst {{ s.worst|length }} items ({{ s.gate.config }})</h2>
+<table><tr><th>ID</th><th>Question</th><th>Relevant</th><th>Retrieved top-5</th><th>hit@5</th><th>MRR</th><th>Faith.</th><th>Answer</th></tr>
+{% for r in s.worst %}<tr><td>{{ r.id }}</td><td>{{ r.question }}</td><td>{{ (r.relevant or [])|join(", ") }}</td><td>{{ (r.retrieved or [])|join(", ") }}</td>
+<td class="num">{{ r.hit_at_5 if r.hit_at_5 is not none else "-" }}</td><td class="num">{{ "%.2f"|format(r.mrr) if r.mrr is not none else "-" }}</td>
+<td class="num">{{ "%.2f"|format(r.faithfulness) if r.faithfulness is not none else "-" }}</td><td>{{ r.answer[:300] }}</td></tr>{% endfor %}
+</table>{% endif %}
+</body>
+</html>

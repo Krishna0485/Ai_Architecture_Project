@@ -1,0 +1,20 @@
+{{- range $name, $c := .Values.components }}
+{{- if and $c.enabled $c.service }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "regintel.fullname" $ }}-{{ $name }}
+  labels:
+    {{- include "regintel.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+spec:
+  type: {{ $c.service.type }}
+  selector:
+    {{- include "regintel.selector" (dict "root" $ "name" $name) | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ $c.service.port }}
+      targetPort: http
+{{- end }}
+{{- end }}

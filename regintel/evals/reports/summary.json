@@ -1,0 +1,597 @@
+{
+  "generated_at": "2026-11-07T07:36:22Z",
+  "dataset": {
+    "name": "golden_qa",
+    "version": "1.0",
+    "items": 71,
+    "answerable": 63,
+    "subset": null,
+    "fingerprint": "91de72b5fb7c"
+  },
+  "env": {
+    "llm_provider": "heuristic",
+    "embedder": "hashing",
+    "reranker": "lexical",
+    "chunks": 65,
+    "python": "3.12.3",
+    "min_score": 0.4
+  },
+  "configs": [
+    {
+      "name": "vector",
+      "config": "vector",
+      "metrics": {
+        "hit_at_5": 0.9524,
+        "recall_at_10": 1.0,
+        "mrr": 0.7913,
+        "context_precision": 0.7554,
+        "context_recall": 0.9365,
+        "citation_precision": 0.7302,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.7911,
+        "answer_f1": 0.3787,
+        "abstention_accuracy": 0.9296,
+        "false_abstention_rate": 0.0794,
+        "p50_latency_ms": 30.521,
+        "p95_latency_ms": 41.3884
+      }
+    },
+    {
+      "name": "bm25",
+      "config": "bm25",
+      "metrics": {
+        "hit_at_5": 0.9841,
+        "recall_at_10": 1.0,
+        "mrr": 0.9176,
+        "context_precision": 0.8977,
+        "context_recall": 0.9524,
+        "citation_precision": 0.7619,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.7743,
+        "answer_f1": 0.3556,
+        "abstention_accuracy": 0.9718,
+        "false_abstention_rate": 0.0,
+        "p50_latency_ms": 22.3985,
+        "p95_latency_ms": 26.9169
+      }
+    },
+    {
+      "name": "hybrid",
+      "config": "hybrid",
+      "metrics": {
+        "hit_at_5": 0.9841,
+        "recall_at_10": 1.0,
+        "mrr": 0.8987,
+        "context_precision": 0.8515,
+        "context_recall": 0.9524,
+        "citation_precision": 0.7593,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.7788,
+        "answer_f1": 0.3682,
+        "abstention_accuracy": 0.9437,
+        "false_abstention_rate": 0.0317,
+        "p50_latency_ms": 31.0563,
+        "p95_latency_ms": 38.3801
+      }
+    },
+    {
+      "name": "hybrid_rerank",
+      "config": "hybrid+rerank",
+      "metrics": {
+        "hit_at_5": 0.9841,
+        "recall_at_10": 1.0,
+        "mrr": 0.9189,
+        "context_precision": 0.9008,
+        "context_recall": 0.9683,
+        "citation_precision": 0.7778,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.7743,
+        "answer_f1": 0.367,
+        "abstention_accuracy": 0.9718,
+        "false_abstention_rate": 0.0,
+        "p50_latency_ms": 55.8585,
+        "p95_latency_ms": 66.0351
+      }
+    },
+    {
+      "name": "hybrid_rerank_rewrite",
+      "config": "hybrid+rerank+rewrite",
+      "metrics": {
+        "hit_at_5": 0.9841,
+        "recall_at_10": 1.0,
+        "mrr": 0.9163,
+        "context_precision": 0.8981,
+        "context_recall": 0.9683,
+        "citation_precision": 0.7857,
+        "faithfulness": 1.0,
+        "answer_relevancy": 0.7711,
+        "answer_f1": 0.3673,
+        "abstention_accuracy": 0.9718,
+        "false_abstention_rate": 0.0,
+        "p50_latency_ms": 56.319,
+        "p95_latency_ms": 64.8949
+      }
+    }
+  ],
+  "per_tag": {
+    "acme": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "adverse-action": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "appraisals": {
+      "n": 2,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "benefits": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "breach-notification": {
+      "n": 3,
+      "hit_at_5": 1.0,
+      "mrr": 0.833,
+      "faithfulness": 1.0
+    },
+    "change-management": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "coverage": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "definitions": {
+      "n": 6,
+      "hit_at_5": 0.833,
+      "mrr": 0.774,
+      "faithfulness": 1.0
+    },
+    "discrimination": {
+      "n": 2,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "eligibility": {
+      "n": 3,
+      "hit_at_5": 1.0,
+      "mrr": 0.667,
+      "faithfulness": 1.0
+    },
+    "employee-notice": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "encryption": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "evaluation": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "exceptions": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "extensions": {
+      "n": 2,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "fmla": {
+      "n": 24,
+      "hit_at_5": 1.0,
+      "mrr": 0.885,
+      "faithfulness": 1.0
+    },
+    "glba": {
+      "n": 25,
+      "hit_at_5": 0.96,
+      "mrr": 0.946,
+      "faithfulness": 1.0
+    },
+    "governance": {
+      "n": 3,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "incident-response": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "information-requests": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 0.5,
+      "faithfulness": 1.0
+    },
+    "intermittent": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "leave-amount": {
+      "n": 3,
+      "hit_at_5": 1.0,
+      "mrr": 0.75,
+      "faithfulness": 1.0
+    },
+    "mfa": {
+      "n": 2,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "military": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 0.25,
+      "faithfulness": 1.0
+    },
+    "monitoring": {
+      "n": 2,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "notices": {
+      "n": 2,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "notifications": {
+      "n": 2,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "paid-leave": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "pregnancy": {
+      "n": 2,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "privacy": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "qualifying-reasons": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 0.5,
+      "faithfulness": 1.0
+    },
+    "records": {
+      "n": 3,
+      "hit_at_5": 1.0,
+      "mrr": 0.833,
+      "faithfulness": 1.0
+    },
+    "regb": {
+      "n": 13,
+      "hit_at_5": 1.0,
+      "mrr": 0.923,
+      "faithfulness": 1.0
+    },
+    "reinstatement": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 0.5,
+      "faithfulness": 1.0
+    },
+    "retaliation": {
+      "n": 2,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "retention": {
+      "n": 2,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "risk": {
+      "n": 2,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "scope": {
+      "n": 4,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "tenant": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "testing": {
+      "n": 2,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "training": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    },
+    "vendors": {
+      "n": 1,
+      "hit_at_5": 1.0,
+      "mrr": 1.0,
+      "faithfulness": 1.0
+    }
+  },
+  "worst": [
+    {
+      "id": "q066",
+      "question": "How many days of paid vacation must employers in Germany provide?",
+      "tags": [
+        "unanswerable"
+      ],
+      "answer": "Similarly, if for some reason the employer's business activity has temporarily ceased and employees generally are not expected to report for work for one or more weeks (e.g., a school closing two weeks for the Christmas/New Year holiday or the summer vacation or an employer closing the plant for retooling or repairs), the days the employer's activities have ceased do not count against the employee's FMLA leave entitlement. [2] (3) If an employee is maintained on the payroll for any part of a week, including any periods of paid or unpaid leave (sick, vacation) during which other benefits or compensation are provided by the employer (e.g., workers' compensation, group health plan benefits, etc.), the week counts as a week of employment. [compressed] [3]",
+      "relevant": [],
+      "retrieved": [
+        "29cfr825:825.300",
+        "29cfr825:825.200",
+        "29cfr825:825.110",
+        "29cfr825:825.207",
+        "29cfr825:825.300"
+      ],
+      "hit_at_5": null,
+      "mrr": null,
+      "faithfulness": null,
+      "abstained": false,
+      "answerable": false
+    },
+    {
+      "id": "q070",
+      "question": "What escalation code does Globex use for adverse action notice exceptions?",
+      "tags": [
+        "unanswerable",
+        "tenant-isolation"
+      ],
+      "answer": "Escalation code ACME-CANARY-7731 must be quoted when escalating safeguards exceptions to the risk committee. [2]",
+      "relevant": [],
+      "retrieved": [
+        "12cfr1002:1002.9",
+        "acme_internal_guidance:1",
+        "12cfr1002:1002.12",
+        "12cfr1002:1002.9",
+        "12cfr1002:1002.9"
+      ],
+      "hit_at_5": null,
+      "mrr": null,
+      "faithfulness": null,
+      "abstained": false,
+      "answerable": false
+    },
+    {
+      "id": "q023",
+      "question": "How does the Safeguards Rule define customer information?",
+      "tags": [
+        "glba",
+        "definitions"
+      ],
+      "answer": "You shall develop, implement, and maintain a comprehensive information security program that is written in one or more readily accessible parts and contains administrative, technical, and physical safeguards that are appropriate to your size and complexity, the nature and scope of your activities, and the sensitivity of any customer information at issue. [1] (2) You shall periodically perform additional risk assessments that reexamine the reasonably foreseeable internal and external risks to the security, confidentiality, and integrity of customer information that could result in the unauthorized disclosure, misuse, alteration, destruction, or other compromise of such information, and reassess the sufficiency of any safeguards in place to control these risks. [4] (1) Taking reasonable steps to select and retain service providers that are capable of maintaining appropriate safeguards for the customer information at issue; [5]",
+      "relevant": [
+        "16cfr314:314.2"
+      ],
+      "retrieved": [
+        "16cfr314:314.3",
+        "16cfr314:314.6",
+        "16cfr314:314.5",
+        "16cfr314:314.4",
+        "16cfr314:314.4"
+      ],
+      "hit_at_5": 0.0,
+      "mrr": 0.14285714285714285,
+      "faithfulness": 1.0,
+      "abstained": false,
+      "answerable": true
+    },
+    {
+      "id": "q031",
+      "question": "How much military caregiver leave can an eligible employee take?",
+      "tags": [
+        "fmla",
+        "leave-amount",
+        "military"
+      ],
+      "answer": "An employer may also request certification to support the need for leave for a qualifying exigency or for military caregiver leave. [2]",
+      "relevant": [
+        "29cfr825:825.200"
+      ],
+      "retrieved": [
+        "29cfr825:825.112",
+        "29cfr825:825.302",
+        "29cfr825:825.100",
+        "29cfr825:825.200",
+        "29cfr825:825.110"
+      ],
+      "hit_at_5": 1.0,
+      "mrr": 0.25,
+      "faithfulness": 1.0,
+      "abstained": false,
+      "answerable": true
+    }
+  ],
+  "checks": {
+    "metrics": {
+      "check_gap_recall": 1.0,
+      "check_gap_precision": 1.0,
+      "check_task_success": 1.0,
+      "check_mean_steps": 7.0
+    },
+    "cases": [
+      {
+        "id": "chk-infosec-gaps",
+        "doc_type": "information_security_policy",
+        "expected": [
+          "GLBA-DISPOSAL",
+          "GLBA-FTC-NOTICE",
+          "GLBA-MFA"
+        ],
+        "found": [
+          "GLBA-DISPOSAL",
+          "GLBA-FTC-NOTICE",
+          "GLBA-MFA"
+        ],
+        "exact": true,
+        "steps": 7,
+        "quarantined_lines": 0,
+        "ms": 200.1
+      },
+      {
+        "id": "chk-infosec-injected",
+        "doc_type": "information_security_policy",
+        "expected": [
+          "GLBA-DISPOSAL",
+          "GLBA-FTC-NOTICE",
+          "GLBA-MFA"
+        ],
+        "found": [
+          "GLBA-DISPOSAL",
+          "GLBA-FTC-NOTICE",
+          "GLBA-MFA"
+        ],
+        "exact": true,
+        "steps": 7,
+        "quarantined_lines": 1,
+        "ms": 177.8
+      },
+      {
+        "id": "chk-infosec-compliant",
+        "doc_type": "information_security_policy",
+        "expected": [],
+        "found": [],
+        "exact": true,
+        "steps": 7,
+        "quarantined_lines": 0,
+        "ms": 187.5
+      },
+      {
+        "id": "chk-leave-gaps",
+        "doc_type": "leave_policy",
+        "expected": [
+          "FMLA-ELIGIBILITY-HOURS",
+          "FMLA-EMPLOYEE-NOTICE",
+          "FMLA-LEAVE-AMOUNT"
+        ],
+        "found": [
+          "FMLA-ELIGIBILITY-HOURS",
+          "FMLA-EMPLOYEE-NOTICE",
+          "FMLA-LEAVE-AMOUNT"
+        ],
+        "exact": true,
+        "steps": 7,
+        "quarantined_lines": 0,
+        "ms": 221.3
+      },
+      {
+        "id": "chk-leave-compliant",
+        "doc_type": "leave_policy",
+        "expected": [],
+        "found": [],
+        "exact": true,
+        "steps": 7,
+        "quarantined_lines": 0,
+        "ms": 173.0
+      },
+      {
+        "id": "chk-credit-gaps",
+        "doc_type": "credit_policy",
+        "expected": [
+          "REGB-NOTIFICATION-30D",
+          "REGB-PROHIBITED-INQUIRY",
+          "REGB-RETENTION-25M"
+        ],
+        "found": [
+          "REGB-NOTIFICATION-30D",
+          "REGB-PROHIBITED-INQUIRY",
+          "REGB-RETENTION-25M"
+        ],
+        "exact": true,
+        "steps": 7,
+        "quarantined_lines": 0,
+        "ms": 102.0
+      },
+      {
+        "id": "chk-credit-compliant",
+        "doc_type": "credit_policy",
+        "expected": [],
+        "found": [],
+        "exact": true,
+        "steps": 7,
+        "quarantined_lines": 0,
+        "ms": 100.8
+      }
+    ]
+  },
+  "chunking": {
+    "structure_aware": {
+      "chunks": 65,
+      "hit_at_5": 0.9841,
+      "mrr": 0.9189,
+      "faithfulness": 1.0,
+      "citation_precision": 0.7778
+    },
+    "fixed_400": {
+      "chunks": 85,
+      "hit_at_5": 0.9048,
+      "mrr": 0.7467,
+      "faithfulness": 1.0,
+      "citation_precision": 0.5873
+    }
+  },
+  "gate": {
+    "config": "hybrid_rerank",
+    "passed": true,
+    "failures": []
+  }
+}

@@ -1,0 +1,2 @@
+question,reference_answer,sections (source:section;...),evidence (verbatim phrase),tags (;-separated)
+<question>,<answer written from the regulation text>,16cfr314:314.4,<exact phrase from that section>,glba;topic

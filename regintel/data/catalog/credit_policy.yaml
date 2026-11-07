@@ -1,0 +1,37 @@
+# Controls derived from 12 CFR Part 1002 (Regulation B, ECOA).
+doc_type: credit_policy
+regulation_source: 12cfr1002
+requirements:
+  - id: REGB-NONDISCRIMINATION
+    section: "1002.4"
+    requirement: A creditor shall not discriminate against an applicant on a prohibited basis regarding any aspect of a credit transaction.
+    keywords: [prohibited basis]
+    severity: high
+  - id: REGB-PROHIBITED-INQUIRY
+    section: "1002.5"
+    requirement: A creditor shall not inquire about the race, color, religion, national origin or sex of an applicant, except for government monitoring purposes.
+    keywords: [religion, national origin, race]
+    prohibited_pattern: "\\b(ask|asks|request|requests|inquire|inquires|collect|collects)\\b[^.]{0,60}\\b(religion|national origin|race|color)\\b"
+    severity: high
+  - id: REGB-NOTIFICATION-30D
+    section: "1002.9"
+    requirement: Notify an applicant of action taken within 30 days after receiving a completed application.
+    keywords: [notified of approval]
+    constraint: {op: max, value: 30, unit: day}
+    severity: high
+  - id: REGB-ADVERSE-REASONS
+    section: "1002.9"
+    requirement: Adverse action notifications must include a statement of specific reasons for the action taken (or disclose the right to a statement of reasons).
+    keywords: [specific reasons]
+    severity: medium
+  - id: REGB-RETENTION-25M
+    section: "1002.12"
+    requirement: Retain records for 25 months after the date a creditor notifies an applicant of action taken on an application.
+    keywords: [retained]
+    constraint: {op: min, value: 25, unit: month}
+    severity: medium
+  - id: REGB-APPRAISALS
+    section: "1002.14"
+    requirement: Provide applicants a copy of all appraisals and other written valuations promptly upon completion or three business days before consummation, whichever is earlier.
+    keywords: [apprais]
+    severity: medium

@@ -1,0 +1,54 @@
+# Controls derived from 29 CFR Part 825 (FMLA).
+doc_type: leave_policy
+regulation_source: 29cfr825
+requirements:
+  - id: FMLA-ELIGIBILITY-HOURS
+    section: "825.110"
+    requirement: An eligible employee has at least 1,250 hours of service during the 12-month period immediately preceding the leave; employers may not require more.
+    keywords: [hours of service]
+    constraint: {op: max, value: 1250, unit: hour}
+    severity: high
+  - id: FMLA-ELIGIBILITY-MONTHS
+    section: "825.110"
+    requirement: An eligible employee has been employed by the employer for at least 12 months.
+    keywords: [months of employment]
+    constraint: {op: max, value: 12, unit: month}
+    severity: medium
+  - id: FMLA-LEAVE-AMOUNT
+    section: "825.200"
+    requirement: An eligible employee is entitled to a total of 12 workweeks of leave during any 12-month period.
+    keywords: [workweeks]
+    constraint: {op: min, value: 12, unit: week}
+    severity: high
+  - id: FMLA-QUALIFYING-REASONS
+    section: "825.112"
+    requirement: Leave is available for birth, adoption or foster placement, care of a spouse, son, daughter or parent with a serious health condition, the employee's own serious health condition, qualifying exigencies and military caregiver leave.
+    keywords: [serious health condition]
+    severity: medium
+  - id: FMLA-EMPLOYEE-NOTICE
+    section: "825.302"
+    requirement: For foreseeable leave an employee must provide at least 30 days advance notice; an employer may not require more than 30 days.
+    keywords: [advance notice]
+    constraint: {op: max, value: 30, unit: day}
+    severity: medium
+  - id: FMLA-HEALTH-BENEFITS
+    section: "825.209"
+    requirement: Maintain group health plan coverage during FMLA leave on the same conditions as if the employee had continued to work.
+    keywords: [group health]
+    severity: high
+  - id: FMLA-RESTORATION
+    section: "825.214"
+    requirement: On return from FMLA leave, restore the employee to the same or an equivalent position with equivalent pay, benefits and other terms.
+    keywords: [equivalent position]
+    severity: high
+  - id: FMLA-NON-RETALIATION
+    section: "825.220"
+    requirement: Employers are prohibited from interfering with, restraining or denying FMLA rights, and from discharging or discriminating against employees for using FMLA leave.
+    keywords: [interfere, retaliat]
+    severity: high
+  - id: FMLA-RECORDS
+    section: "825.500"
+    requirement: Employers must keep FMLA records for no less than three years.
+    keywords: [records are kept, leave records]
+    constraint: {op: min, value: 3, unit: year}
+    severity: low

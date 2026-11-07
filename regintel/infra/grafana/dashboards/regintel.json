@@ -1,0 +1,87 @@
+{
+  "uid": "regintel-overview",
+  "title": "RegIntel - Overview",
+  "tags": ["regintel", "llm", "rag"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-6h", "to": "now" },
+  "templating": { "list": [] },
+  "panels": [
+    {
+      "id": 1, "type": "stat", "title": "Requests / s",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "refId": "A", "expr": "sum(rate(regintel_request_seconds_count[5m]))" }],
+      "fieldConfig": { "defaults": { "unit": "reqps", "decimals": 2 } }
+    },
+    {
+      "id": 2, "type": "stat", "title": "p95 API latency",
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "refId": "A", "expr": "histogram_quantile(0.95, sum by (le) (rate(regintel_request_seconds_bucket[5m])))" }],
+      "fieldConfig": { "defaults": { "unit": "s", "decimals": 2 } }
+    },
+    {
+      "id": 3, "type": "stat", "title": "Est. LLM cost (24h)",
+      "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "refId": "A", "expr": "sum(increase(regintel_llm_cost_usd_total[24h]))" }],
+      "fieldConfig": { "defaults": { "unit": "currencyUSD", "decimals": 2 } }
+    },
+    {
+      "id": 4, "type": "stat", "title": "Semantic cache hit rate",
+      "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "refId": "A", "expr": "sum(rate(regintel_cache_events_total{cache=\"semantic\",result=\"hit\"}[1h])) / clamp_min(sum(rate(regintel_cache_events_total{cache=\"semantic\"}[1h])), 1e-9)" }],
+      "fieldConfig": { "defaults": { "unit": "percentunit", "decimals": 1 } }
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "API latency by route (p50 / p95)",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "refId": "A", "legendFormat": "p50 {{route}}", "expr": "histogram_quantile(0.5, sum by (le, route) (rate(regintel_request_seconds_bucket[5m])))" },
+        { "refId": "B", "legendFormat": "p95 {{route}}", "expr": "histogram_quantile(0.95, sum by (le, route) (rate(regintel_request_seconds_bucket[5m])))" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    },
+    {
+      "id": 6, "type": "timeseries", "title": "LLM latency by task (p95)",
+      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "refId": "A", "legendFormat": "{{task}} / {{model}}", "expr": "histogram_quantile(0.95, sum by (le, task, model) (rate(regintel_llm_seconds_bucket[5m])))" }],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    },
+    {
+      "id": 7, "type": "timeseries", "title": "Tokens / s by model and kind",
+      "gridPos": { "x": 0, "y": 12, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "refId": "A", "legendFormat": "{{model}} {{kind}}", "expr": "sum by (model, kind) (rate(regintel_llm_tokens_total[5m]))" }]
+    },
+    {
+      "id": 8, "type": "timeseries", "title": "Guardrail events",
+      "gridPos": { "x": 12, "y": 12, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "refId": "A", "legendFormat": "{{guard}} {{action}}", "expr": "sum by (guard, action) (increase(regintel_guardrail_events_total[15m]))" }]
+    },
+    {
+      "id": 9, "type": "timeseries", "title": "Abstentions, fallbacks, checks",
+      "gridPos": { "x": 0, "y": 20, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        { "refId": "A", "legendFormat": "abstentions", "expr": "sum(increase(regintel_abstentions_total[15m]))" },
+        { "refId": "B", "legendFormat": "fallbacks {{task}}", "expr": "sum by (task) (increase(regintel_llm_fallbacks_total[15m]))" },
+        { "refId": "C", "legendFormat": "checks {{status}}", "expr": "sum by (status) (increase(regintel_checks_total[15m]))" }
+      ]
+    },
+    {
+      "id": 10, "type": "timeseries", "title": "Retrieval latency by mode (p95)",
+      "gridPos": { "x": 12, "y": 20, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "refId": "A", "legendFormat": "{{mode}}", "expr": "histogram_quantile(0.95, sum by (le, mode) (rate(regintel_retrieval_seconds_bucket[5m])))" }],
+      "fieldConfig": { "defaults": { "unit": "s" } }
+    }
+  ]
+}

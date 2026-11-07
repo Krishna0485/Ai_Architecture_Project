@@ -1,0 +1,27 @@
+# syntax=docker/dockerfile:1.7
+# Queue worker for long document checks (REGINTEL_CHECK_EXECUTOR=queue + Postgres checkpointer).
+ARG PYTHON_VERSION=3.12
+
+FROM python:${PYTHON_VERSION}-slim AS builder
+COPY --from=ghcr.io/astral-sh/uv:0.5.11 /uv /usr/local/bin/uv
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy UV_PYTHON_DOWNLOADS=never
+WORKDIR /app
+COPY pyproject.toml uv.lock* README.md ./
+RUN --mount=type=cache,target=/root/.cache/uv uv sync --no-dev --no-install-project --extra stores
+COPY src ./src
+RUN --mount=type=cache,target=/root/.cache/uv uv sync --no-dev --extra stores
+
+FROM python:${PYTHON_VERSION}-slim
+RUN groupadd --system --gid 10001 regintel && \
+    useradd --system --uid 10001 --gid regintel --home /app regintel
+WORKDIR /app
+COPY --from=builder --chown=regintel:regintel /app/.venv /app/.venv
+COPY --chown=regintel:regintel src ./src
+COPY --chown=regintel:regintel prompts ./prompts
+COPY --chown=regintel:regintel data/samples ./data/samples
+COPY --chown=regintel:regintel data/catalog ./data/catalog
+ENV PATH="/app/.venv/bin:$PATH" PYTHONUNBUFFERED=1 REGINTEL_PROJECT_ROOT=/app \
+    REGINTEL_PROMPTS_DIR=/app/prompts REGINTEL_DATA_DIR=/app/data REGINTEL_CATALOG_DIR=/app/data/catalog \
+    REGINTEL_CHECK_EXECUTOR=queue REGINTEL_CHECKPOINTER=postgres
+USER 10001
+CMD ["python", "-m", "regintel.worker"]

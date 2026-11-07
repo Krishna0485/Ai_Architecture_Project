@@ -1,0 +1,47 @@
+# LiteLLM proxy: model aliases, fallbacks and budgets. RegIntel only ever asks for "fast" or
+# "smart"; which concrete model serves each alias is an ops decision made here.
+model_list:
+  # fast: small quantised local model - classification, extraction, query rewrite, checklists
+  - model_name: fast
+    litellm_params:
+      model: ollama/qwen2.5:3b-instruct-q4_K_M
+      api_base: http://ollama:11434
+      timeout: 60
+  # smart: larger local model - answer synthesis, compare, test generation, judging
+  - model_name: smart
+    litellm_params:
+      model: ollama/qwen2.5:7b-instruct-q4_K_M
+      api_base: http://ollama:11434
+      timeout: 120
+  # smart-hosted: optional hosted fallback (set ANTHROPIC_API_KEY in .env)
+  - model_name: smart-hosted
+    litellm_params:
+      model: anthropic/claude-sonnet-5-5
+      api_key: os.environ/ANTHROPIC_API_KEY
+      timeout: 60
+  # quantisation comparison targets for benchmarks/run_bench.py --quant-models
+  - model_name: smart-q8
+    litellm_params: { model: ollama/qwen2.5:7b-instruct-q8_0, api_base: http://ollama:11434 }
+  - model_name: smart-fp16
+    litellm_params: { model: ollama/qwen2.5:7b-instruct-fp16, api_base: http://ollama:11434 }
+  # embeddings for the RAGAS judge
+  - model_name: embed
+    litellm_params: { model: ollama/nomic-embed-text, api_base: http://ollama:11434 }
+
+router_settings:
+  routing_strategy: simple-shuffle
+  num_retries: 1
+  fallbacks:
+    - smart: [smart-hosted]
+    - fast: [smart]
+  allowed_fails: 2
+  cooldown_time: 30
+
+litellm_settings:
+  drop_params: true
+  request_timeout: 120
+  max_budget: 50          # USD hard cap for the proxy (hosted fallback only costs money)
+  budget_duration: 30d
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY

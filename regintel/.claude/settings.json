@@ -1,0 +1,51 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv run pytest:*)",
+      "Bash(uv run ruff:*)",
+      "Bash(uv run mypy:*)",
+      "Bash(make lint)",
+      "Bash(make test)",
+      "Bash(make eval)",
+      "Bash(make eval-fast)",
+      "Bash(make bench)",
+      "Bash(git diff:*)",
+      "Bash(git status)",
+      "Bash(git log:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Edit(./.env)",
+      "Edit(./.env.*)",
+      "Write(./.env)",
+      "Write(./.env.*)",
+      "Edit(./evals/thresholds.yaml)",
+      "Bash(git push:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c \"import json,sys; p=json.load(sys.stdin).get('tool_input',{}).get('file_path',''); n=p.replace(chr(92),'/').split('/')[-1]; sys.exit(2 if n=='.env' or (n.startswith('.env.') and n!='.env.example') else 0)\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ruff format --quiet src tests evals benchmarks && uv run pytest tests/unit -q -x --no-cov -p no:cacheprovider > /dev/null || echo 'unit tests failing after edit' >&2"
+          }
+        ]
+      }
+    ]
+  }
+}

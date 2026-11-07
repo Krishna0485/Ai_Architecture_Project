@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Secrets & local config
+.env
+.env.*
+!.env.example
+
+# Data: only samples, catalogs and scripts are versioned
+data/raw/
+data/index/
+data/audit/
+data/uploads/
+*.safetensors
+*.gguf
+*.bin
+
+# Reports: keep summaries + latest, ignore subset runs
+evals/reports/summary_subset.json
+
+# Infra
+.terraform/
+*.tfstate
+*.tfstate.*
+infra/terraform/*.tfvars
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

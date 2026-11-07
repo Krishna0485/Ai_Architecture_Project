@@ -1,0 +1,9 @@
+apiVersion: v2
+name: regintel
+description: RegIntel - agentic compliance intelligence (API, MCP server, check worker)
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords: [rag, llm, agents, mcp, compliance]
+maintainers:
+  - name: Krishna

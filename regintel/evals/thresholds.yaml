@@ -1,0 +1,17 @@
+# CI gates (do not change without an explicit decision recorded in docs/evaluation.md).
+gate_config: hybrid_rerank   # the production retrieval configuration that the gate applies to
+fast_subset:
+  size: 30
+gates:
+  hit_at_5:          { min: 0.80 }
+  mrr:               { min: 0.65 }
+  faithfulness:      { min: 0.90 }
+  # Lexical proxy (question-term coverage of the answer). Baseline v1.0 with the offline
+  # extractive generator = 0.778; gate = baseline - 0.03. Raise to 0.85 when the gate runs on
+  # RAGAS answer_relevancy with a real model (docs/evaluation.md#gates).
+  answer_relevancy:  { min: 0.75 }
+  abstention_accuracy: { min: 0.90 }
+  check_gap_recall:  { min: 0.95 }
+  regression:
+    max_drop_hit_at_5: 0.03
+    max_drop_faithfulness: 0.02

@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "generated_at": "2026-11-07T07:37:41Z",
+    "requests": 300,
+    "concurrency": 4,
+    "provider": "heuristic",
+    "pricing": {
+      "fast": [
+        0.0,
+        0.0
+      ],
+      "smart": [
+        3.0,
+        15.0
+      ],
+      "heuristic": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "results": [
+    {
+      "config": "baseline",
+      "description": "no cache, no compression, single model",
+      "requests": 300,
+      "concurrency": 4,
+      "model": "heuristic",
+      "p50_ms": 153.36,
+      "p95_ms": 331.54,
+      "throughput_rps": 23.54,
+      "llm_calls": 603,
+      "tokens_per_request": 3730.2,
+      "answer_cache_hit_rate": 0.0,
+      "est_cost_per_1k_usd": 12.485
+    },
+    {
+      "config": "+compression",
+      "description": "context compressed to token budget",
+      "requests": 300,
+      "concurrency": 4,
+      "model": "heuristic",
+      "p50_ms": 151.45,
+      "p95_ms": 332.93,
+      "throughput_rps": 23.13,
+      "llm_calls": 603,
+      "tokens_per_request": 2282.4,
+      "answer_cache_hit_rate": 0.0,
+      "est_cost_per_1k_usd": 8.1578
+    },
+    {
+      "config": "+routing",
+      "description": "fast model for rewrite, smart for answers",
+      "requests": 300,
+      "concurrency": 4,
+      "model": "heuristic",
+      "p50_ms": 153.06,
+      "p95_ms": 344.74,
+      "throughput_rps": 23.23,
+      "llm_calls": 603,
+      "tokens_per_request": 2282.4,
+      "answer_cache_hit_rate": 0.0,
+      "est_cost_per_1k_usd": 7.5255
+    },
+    {
+      "config": "+semantic_cache",
+      "description": "compression + routing + semantic/exact cache",
+      "requests": 300,
+      "concurrency": 4,
+      "model": "heuristic",
+      "p50_ms": 26.89,
+      "p95_ms": 254.13,
+      "throughput_rps": 63.78,
+      "llm_calls": 113,
+      "tokens_per_request": 384.8,
+      "answer_cache_hit_rate": 0.8167,
+      "est_cost_per_1k_usd": 1.32
+    }
+  ]
+}
