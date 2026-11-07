@@ -1,0 +1,48 @@
+name: regintel-eval
+on:
+  pull_request:
+    paths:
+      - "regintel/src/regintel/retrieval/**"
+      - "regintel/src/regintel/generation/**"
+      - "regintel/src/regintel/agents/**"
+      - "regintel/src/regintel/text.py"
+      - "regintel/prompts/**"
+      - "regintel/evals/**"
+      - "regintel/data/samples/**"
+      - "regintel/data/catalog/**"
+  schedule:
+    - cron: "0 3 * * *" # nightly full evaluation
+  workflow_dispatch:
+permissions:
+  contents: read
+defaults:
+  run:
+    working-directory: regintel
+
+jobs:
+  eval-fast:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with: { python-version: "3.12", enable-cache: true, cache-dependency-glob: "regintel/uv.lock" }
+      - run: uv sync --group dev
+      - name: Fast gate (30-question stratified subset + agent check suite)
+        run: uv run python evals/run_eval.py --subset 30 --configs hybrid_rerank --suites retrieval,checks
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: eval-subset, path: regintel/evals/reports/summary_subset.json }
+
+  eval-full:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with: { python-version: "3.12", enable-cache: true, cache-dependency-glob: "regintel/uv.lock" }
+      - run: uv sync --group dev
+      - run: uv run python evals/run_eval.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: eval-report, path: regintel/evals/reports/ }

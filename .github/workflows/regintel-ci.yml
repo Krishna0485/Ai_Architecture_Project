@@ -1,0 +1,45 @@
+name: regintel-ci
+on:
+  push:
+    branches: [main]
+    paths: ["regintel/**", ".github/workflows/regintel-ci.yml"]
+  pull_request:
+    paths: ["regintel/**", ".github/workflows/regintel-ci.yml"]
+permissions:
+  contents: read
+concurrency:
+  group: regintel-ci-${{ github.ref }}
+  cancel-in-progress: true
+defaults:
+  run:
+    working-directory: regintel
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with: { python-version: "3.12", enable-cache: true, cache-dependency-glob: "regintel/uv.lock" }
+      - run: uv sync --group dev
+      - run: uv run ruff check . && uv run ruff format --check .
+      - run: uv run mypy
+      - run: uv run pytest tests/unit tests/security tests/integration tests/e2e --cov=regintel --cov-report=xml
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: lint-test
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f infra/docker/Dockerfile.api -t regintel-api:ci .
+      - uses: aquasecurity/trivy-action@0.28.0
+        with: { image-ref: "regintel-api:ci", severity: "CRITICAL,HIGH", exit-code: "1",
+                ignore-unfixed: true }
+
+  helm-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - run: helm lint infra/k8s/helm/regintel
+      - run: helm template regintel infra/k8s/helm/regintel > /dev/null

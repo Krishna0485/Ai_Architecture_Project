@@ -1,0 +1,30 @@
+name: libs-ci
+on:
+  push:
+    branches: [main]
+    paths: ["rag-eval-kit/**", "regintel-mcp-servers/**", ".github/workflows/libs-ci.yml"]
+  pull_request:
+    paths: ["rag-eval-kit/**", "regintel-mcp-servers/**", ".github/workflows/libs-ci.yml"]
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [rag-eval-kit, regintel-mcp-servers]
+        python-version: ["3.11", "3.12"]
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with: { python-version: "${{ matrix.python-version }}", enable-cache: true,
+                cache-dependency-glob: "${{ matrix.project }}/uv.lock" }
+      - run: uv sync --group dev
+      - run: uv run ruff check . && uv run ruff format --check .
+      - run: uv run mypy
+      - run: uv run pytest

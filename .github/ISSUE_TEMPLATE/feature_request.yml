@@ -1,0 +1,17 @@
+name: Feature / phase task
+description: Propose a feature or a build-plan task
+labels: [enhancement]
+body:
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Phase
+      options: ["0 foundation", "1 ingestion", "2 baseline RAG", "3 evaluation", "4 retrieval",
+                "5 agents", "6 MCP", "7 optimisation", "8 security", "9 observability", "10 polish"]
+  - type: textarea
+    id: goal
+    attributes: { label: Goal and done criteria }
+    validations: { required: true }
+  - type: textarea
+    id: measure
+    attributes: { label: How will we measure it?, description: Eval metric, benchmark or test }

@@ -1,0 +1,16 @@
+# Applies repo-wide; each project also has its own .gitignore.
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+.env
+.env.*
+!.env.example
+~$*.docx
+.DS_Store
+Thumbs.db
+GitHub_Portfolio_Build_Plan_Claude_Code.docx

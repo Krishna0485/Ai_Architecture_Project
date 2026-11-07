@@ -1,0 +1,24 @@
+version: 2
+updates:
+  - package-ecosystem: uv
+    directory: "/regintel"
+    schedule: { interval: weekly }
+    groups: { minor-and-patch: { update-types: [minor, patch] } }
+    ignore:
+      - dependency-name: mcp
+        versions: [">=2"]  # see regintel/docs/adr/0006-mcp-sdk-version.md
+  - package-ecosystem: uv
+    directory: "/rag-eval-kit"
+    schedule: { interval: weekly }
+  - package-ecosystem: uv
+    directory: "/regintel-mcp-servers"
+    schedule: { interval: weekly }
+    ignore:
+      - dependency-name: mcp
+        versions: [">=2"]
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule: { interval: weekly }
+  - package-ecosystem: docker
+    directory: "/regintel/infra/docker"
+    schedule: { interval: weekly }
