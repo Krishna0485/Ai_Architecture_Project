@@ -1,0 +1,4 @@
+{"id": "q1", "question": "How many workweeks of FMLA leave is an eligible employee entitled to?", "reference_answer": "A total of 12 workweeks of leave during any 12-month period.", "relevant_ids": ["29cfr825:825.200"], "tags": ["fmla"]}
+{"id": "q2", "question": "When must the FTC be notified of a notification event?", "reference_answer": "As soon as possible and no later than 30 days after discovery, if at least 500 consumers are involved.", "relevant_ids": ["16cfr314:314.4"], "tags": ["glba"]}
+{"id": "q3", "question": "How long must creditors retain application records?", "reference_answer": "25 months (12 months for business credit) after notifying the applicant of action taken.", "relevant_ids": ["12cfr1002:1002.12"], "tags": ["regb"]}
+{"id": "q4", "question": "What is the minimum wage in California?", "reference_answer": null, "relevant_ids": [], "tags": ["unanswerable"]}
