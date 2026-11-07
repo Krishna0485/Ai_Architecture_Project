@@ -40,6 +40,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: azure/setup-helm@v4
+      - uses: azure/setup-helm@v5
       - run: helm lint infra/k8s/helm/regintel
       - run: helm template regintel infra/k8s/helm/regintel > /dev/null
