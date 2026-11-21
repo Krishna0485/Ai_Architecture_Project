@@ -14,7 +14,7 @@ ragas = ["ragas>=0.2", "datasets>=2.19"]
 rag-eval = "rag_eval_kit.cli:main"
 
 [dependency-groups]
-dev = ["pytest>=8.2", "pytest-cov>=5.0", "ruff>=0.6", "mypy>=1.11"]
+dev = ["pytest>=8.2", "pytest-cov>=5.0", "ruff>=0.17.5", "mypy>=1.11"]
 
 [build-system]
 requires = ["hatchling>=1.25"]
